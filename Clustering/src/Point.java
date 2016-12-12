@@ -1,4 +1,10 @@
 
+/**
+ * Datatype for storing the x and y value of a Point
+ * 
+ * @author JacobRickman
+ *
+ */
 public class Point {
 
 	

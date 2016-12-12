@@ -1,6 +1,15 @@
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Data Type for the clusters
+ * 	Contains the internal points, centroid, and id,
+ * along with functions for finding distance from and reevaluating the centroid
+ * and merging
+ * 
+ * @author JacobRickman
+ *
+ */
 public class Cluster {
 	public HashSet<Point> cluster;
 	public Point centroid;
@@ -45,7 +54,7 @@ public class Cluster {
 	
 	public String toString()
 	{
-		return id + ": " + "(" + centroid.x + ", " + centroid.y + ")";
+		return "Center of " + id + ": " + "(" + centroid.x + ", " + centroid.y + ")";
 	}
 	
 	public Point reevaluate()
@@ -59,8 +68,11 @@ public class Cluster {
 			y += p.y;
 		}
 		
-		x = x / cluster.size();
-		y = y / cluster.size();
+		x += centroid.x;
+		y += centroid.y;
+		
+		x = x / (cluster.size() + 1);
+		y = y / (cluster.size() + 1);
 		
 		return new Point(x, y);
 	}
@@ -72,5 +84,51 @@ public class Cluster {
 		
 		
 		return Math.sqrt(Math.pow(xdif, 2) + Math.pow(ydif, 2));
+	}
+	
+	//returns the distance to the furthest point in the cluster
+	public double sizeOf()
+	{
+		double maxDist = 0;
+		double temp;
+		
+		for (Point p : cluster)
+		{
+			temp = distFrom(p);
+			if (temp > maxDist)
+				maxDist = temp;
+		}
+		
+		return maxDist;
+	}
+	
+	public Point farthestPoint()
+	{
+		Point farthest = null;
+		double maxDist = 0;
+		double tmp;
+		
+		for (Point p : cluster)
+		{
+			tmp = distFrom(p);
+			if (tmp > maxDist)
+			{
+				maxDist = tmp;
+				farthest = p;
+			}
+		}
+		
+		
+		return farthest;
+	}
+	
+	public void merge(Cluster c)
+	{
+		for (Point p : c.cluster)
+		{
+			this.cluster.add(p);
+		}
+		
+		this.centroid = this.reevaluate();
 	}
 }
