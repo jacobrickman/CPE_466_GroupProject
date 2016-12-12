@@ -74,6 +74,8 @@ public class Cluster {
 		x = x / (cluster.size() + 1);
 		y = y / (cluster.size() + 1);
 		
+		cluster.clear();
+		
 		return new Point(x, y);
 	}
 	
