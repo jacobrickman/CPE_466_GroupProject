@@ -18,7 +18,7 @@ public class Clustering {
 	 */
 	private static HashMap<Integer, ArrayList<Point>> parseCSV(String name) {
 		HashMap<Integer, ArrayList<Point>> ret = new HashMap<>();
-
+		int xyz = 0;
 		try {
 			Scanner file = new Scanner(new File(name));
 			String line = "";
@@ -43,9 +43,10 @@ public class Clustering {
 				year = Integer.parseInt(date.split("/")[2].split(" ")[0]);
 				latitude = Double.parseDouble(columns[columns.length - 2]);
 				longitude = Double.parseDouble(columns[columns.length - 1]);
-				if (latitude != 0 && longitude != 0 && latitude > 2 && latitude < 50 
+				if (latitude != 0 && longitude != 0 && latitude > 25.2 && latitude < 50 
 						&& longitude > -127 && longitude < -64.6)
 				{
+					xyz++;
 					spot = new Point(latitude, longitude);
 				
 					if (ret.containsKey(year))
@@ -65,7 +66,7 @@ public class Clustering {
 		{
 			System.out.println("parse " +e);
 		}
-		
+		System.out.println(xyz);
 		return ret;
 	}
 	
