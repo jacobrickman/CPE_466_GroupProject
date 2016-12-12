@@ -9,6 +9,14 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.ScrollPane;
+import java.awt.Component;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 /**
  * Draws the sightings and outlines the clusters they are in, on top of a map of the US
@@ -16,6 +24,9 @@ import java.awt.event.MouseEvent;
  *
  */
 public class GUI {
+	private static JTextField textField;
+	private static JTextField textField_1;
+	
 	 private static void createAndShowGUI() {
 	        //Create and set up the window.
 	        JFrame frmUfos = new JFrame();
@@ -23,7 +34,37 @@ public class GUI {
 	        frmUfos.setTitle("UFOs");
 	        frmUfos.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        
+	        JSplitPane splitPane = new JSplitPane();
+	        frmUfos.getContentPane().add(splitPane, BorderLayout.EAST);
+	        
 	        JPanel panel = new MyPanel();
+	        
+	        splitPane.setRightComponent(panel);
+	        
+	        JSlider slider = new JSlider();
+	        slider.addChangeListener(new ChangeListener() {
+	        	public void stateChanged(ChangeEvent e) {
+	        		if (!slider.getValueIsAdjusting()) {
+	        			int year = slider.getValue();
+	        			JPanel newPanel = new MyPanel(year);
+	        			splitPane.setRightComponent(newPanel);
+	        		}
+	        	}
+	        });
+	        slider.setMinorTickSpacing(1);
+	        slider.setMajorTickSpacing(10);
+	        slider.setMaximum(2010);
+	        slider.setMinimum(1910);
+	        slider.setValue(1960);
+	        slider.setSnapToTicks(true);
+	        slider.setPaintTicks(true);
+	        slider.setPaintLabels(true);
+	        slider.setOrientation(SwingConstants.VERTICAL);
+	        splitPane.setLeftComponent(slider);
+	        
+	        //splitPane.setRightComponent(panel);
+	        
+	        /*
 	        panel.addMouseListener(new MouseAdapter() {
 	        	@Override
 	        	public void mouseClicked(MouseEvent e) {
@@ -41,8 +82,7 @@ public class GUI {
 	        		System.out.println(x + ", " + y);
 	        	}
 	        });
-	        
-	        frmUfos.getContentPane().add(panel);
+	        */        
 	        
 	        //Display the window.
 	        frmUfos.pack();
@@ -62,8 +102,16 @@ public class GUI {
 	    
 class MyPanel extends JPanel {
 
+		public int year;
+	
         public MyPanel() {
             setBorder(BorderFactory.createLineBorder(Color.black));
+            this.year = 1960;
+        }
+        
+        public MyPanel(int year) {
+            setBorder(BorderFactory.createLineBorder(Color.black));
+            this.year = year;
         }
 
         public Dimension getPreferredSize() {
@@ -87,14 +135,15 @@ class MyPanel extends JPanel {
             	System.out.println("Paint: " + e);
             }
             
-            Clustering.run(1960);
+            Clustering.run(year);
+            System.out.println("running " + year);
 
             ovals = Clustering.createCircles(Clustering.clusters);
             
             //Draw Cluster Outlines
             for (Oval o : ovals)
             {
-            	g.setColor(Color.WHITE);
+            	g.setColor(Color.BLACK);
             	//g.fillOval(o.midX, o.midY, 10, 10);
             	g.drawOval(o.midX, o.midY, o.width, o.height);
             }
