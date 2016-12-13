@@ -19,8 +19,11 @@ public class Flights {
         ResultSet rs = c.createStatement().executeQuery(sql);
 
         while (rs.next()) {
-            Point source = new Point(rs.getInt("a1.LONGITUDE"), rs.getInt("a1.LATITUDE"));
-            Point dest = new Point(rs.getInt("a2.LONGITUDE"), rs.getInt("a2.LATITUDE"));
+            //Point source = new Point(rs.getInt("a1.LONGITUDE"), rs.getInt("a1.LATITUDE"));
+            //Point dest = new Point(rs.getInt("a2.LONGITUDE"), rs.getInt("a2.LATITUDE"));
+
+            Point source = new Point(rs.getInt(5), rs.getInt(6));
+            Point dest = new Point(rs.getInt(9), rs.getInt(10));
 
             for (ConvexHull curConvex : hulls) {
                 if (passThrough(source, dest, 1, curConvex.getHull().size(), curConvex)) {
@@ -98,6 +101,11 @@ public class Flights {
     }
 
     public static boolean passThrough(Point start, Point destination, int startIdx, int endIdx, ConvexHull convex) {
+        /*
+        System.out.println("START");
+        System.out.println(start.toString()+" "+destination.toString());
+        System.out.println(convex.getHull().toString());
+*/
         ArrayList<Point> points = convex.getHull();
         int midIdx = startIdx + (endIdx - startIdx)/2;
         if (endIdx <= startIdx) {
@@ -111,6 +119,10 @@ public class Flights {
             return true;
         }
         else {
+            if (endIdx == startIdx + 1) {
+                return false;
+            }
+
             double crossProd = ConvexHull.crossProd(vStart, vDest, start);
             // If start is left of current line
             if (crossProd < 0) {
@@ -144,8 +156,6 @@ public class Flights {
         Point x1 = new Point(1, -4);
 
         ConvexHull ch = new ConvexHull(cluster);
-        System.out.println(ch.toString());
-        //System.out.println(intersect(new Point(2, 2), new Point(2, -3), new Point(-2, 2), new Point(4, 1)));
         //readAirports("files/airports.csv");
         //readRoutes("files/routes.csv");
         Connection c;

@@ -12,15 +12,19 @@ public class ConvexHull {
     /** Hull is ordered starting with leftmost point and going counter-clockwise **/
     public ArrayList<Point> jarvisMarch(Cluster cluster) {
         int numPoints = cluster.size();
+        if (cluster.size() == 0) {
+            return new ArrayList<>();
+        }
         ArrayList<Point> points = new ArrayList<>(cluster.cluster);
         ArrayList<Point> hull = new ArrayList<>();
 
         // Find leftmost point
         int leftIdx = -1;
         double leftmost = Double.MAX_VALUE;
+
         for (int i=0; i < points.size(); i++) {
-            if (points.get(i).lng < leftmost) {
-                leftmost = points.get(i).lng;
+            if (points.get(i).y < leftmost) {
+                leftmost = points.get(i).y;
                 leftIdx = i;
             }
         }
@@ -52,11 +56,11 @@ public class ConvexHull {
         double lowLat = 999999;
         double lowLng = 999999;
         for (int i=0; i < points.size(); i++) {
-            if (points.get(i).lat <= lowLat) {
-                if (points.get(i).lat != lowLat || points.get(i).lng < lowLng) {
-                    lowLat = points.get(i).lat;
+            if (points.get(i).x <= lowLat) {
+                if (points.get(i).x != lowLat || points.get(i).y < lowLng) {
+                    lowLat = points.get(i).x;
                     lowIdx = i;
-                    lowLng = points.get(i).lng;
+                    lowLng = points.get(i).y;
                 }
             }
         }
@@ -79,7 +83,7 @@ public class ConvexHull {
 */
 
     public static double crossProd(Point center, Point p1, Point p2) {
-        return (p1.lng - center.lng) * (p2.lat - p1.lat) - (p1.lat - center.lat) * (p2.lng - p1.lng);
+        return (p1.y - center.y) * (p2.x - p1.x) - (p1.x - center.x) * (p2.y - p1.y);
     }
 
     private ArrayList<Point> hull;
