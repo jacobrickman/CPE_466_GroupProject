@@ -240,8 +240,9 @@ public class Clustering {
 	 * @param list, list of all the clusters
 	 * @return list of all the sightings
 	 */
-	public static ArrayList<Oval> createSightings(ArrayList<Cluster> list)
+	public static HashMap<Integer, ArrayList<Oval>> createSightings(ArrayList<Cluster> list)
 	{
+		HashMap<Integer, ArrayList<Oval>> ret = new HashMap<Integer, ArrayList<Oval>>();
 		ArrayList<Oval> ovals = new ArrayList<>();
 		double scaleLong = .03853;
 		double offsetLong = 64.13079;
@@ -251,6 +252,7 @@ public class Clustering {
 		int offsetY = 861;
 		int pxX;
 		int pxY;
+		int count = 0;
 		
 		for (Cluster c : list)
 		{
@@ -262,9 +264,11 @@ public class Clustering {
 			
 				ovals.add(new Oval(pxX - 5, pxY - 5, 10, 10));
 			}
+			ret.put(count++, ovals);
+			ovals = new ArrayList<>();
 		}
 		
-		return ovals;
+		return ret;
 	}
 	
 	/**

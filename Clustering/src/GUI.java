@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -120,8 +122,10 @@ class MyPanel extends JPanel {
 
         public void paintComponent(Graphics g) {
         	ArrayList<Oval> ovals = null;
+        	HashMap<Integer, ArrayList<Oval>> sights = null;
         	int leftShiftedX;
         	int upShiftedY;
+        	Random rand = new Random();
         	
             super.paintComponent(g);    
             
@@ -140,6 +144,7 @@ class MyPanel extends JPanel {
 
             ovals = Clustering.createCircles(Clustering.clusters);
             
+            rand.setSeed(0);
             //Draw Cluster Outlines
             for (Oval o : ovals)
             {
@@ -149,15 +154,25 @@ class MyPanel extends JPanel {
             }
             
             
-            ovals = Clustering.createSightings(Clustering.clusters);
+            sights = Clustering.createSightings(Clustering.clusters);
             
-            
+            rand.setSeed(0);
             //Draw sightings
-            for (Oval o : ovals)
-            {
-            	g.setColor(Color.BLACK);
-            	g.fillOval(o.midX, o.midY, o.width, o.height);
+            for (ArrayList<Oval> ovalss : sights.values()) {
+            	int temp = rand.nextInt(255);
+            	int temp2 = rand.nextInt(255);
+            	int temp3 = rand.nextInt(255);
+            	//g.setColor(new Color(temp, temp2, temp3));
+	            for (Oval o : ovalss) {
+	            	//g.setColor(Color.BLACK);
+	            	g.setColor(new Color(temp, temp2, temp3));
+	            	g.fillOval(o.midX, o.midY, o.width, o.height);
+	            	g.setColor(Color.BLACK);
+	            	g.drawOval(o.midX, o.midY, o.width, o.height);
+	            }
             }
+            
+            g.drawString(Integer.toString(year), 1300, 300);
 
         }  
 }
