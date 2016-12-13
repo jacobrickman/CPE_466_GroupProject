@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
@@ -152,6 +153,7 @@ public class Clustering {
 	{
 		ArrayList<Tuple> distTo;
 		ArrayList<Cluster> clusters = new ArrayList<>();
+		HashSet<Point> outliers;
 		int id = 1;
 		int minId;
 		double minDist;
@@ -164,7 +166,7 @@ public class Clustering {
 		
 		for (Point p : initialCentroids)
 			clusters.add(new Cluster(id++, p));
-				
+
 		while (iterations-- != 0)
 		{	
 			for (Cluster c : clusters)
@@ -217,9 +219,16 @@ public class Clustering {
 					}
 				}
 			}
-			
-		
-			
+			//if (iterations % 2 == 1) {
+				for (Cluster c : clusters) {
+					outliers = c.findOutliers();
+					
+					for (Point p : outliers) {
+						c.remove(p);
+						data.remove(p);
+					}
+				}
+			//}
 		}
 			
 		return clusters;
@@ -312,6 +321,7 @@ public class Clustering {
 		HashMap<Integer, ArrayList<Point>> locations = parseCSV("ufo_sightings.csv");
 		ArrayList<Point> initial = new ArrayList<>();		
 		ArrayList<State> allStates = readStatesCSV();
+		//HashSet<Point> outliers;
 		
 		for (State s : allStates)
 		{
@@ -326,7 +336,15 @@ public class Clustering {
 		*/
 		
 		clusters = runClustering(2, initial, locations.get(year));
-		
+		/*
+		for (Cluster c : clusters) {
+			outliers = c.findOutliers();
+			
+			for (Point p : outliers) {
+				c.remove(p);
+			}
+		}
+		*/
 		/*
 		for (Cluster c : clusters)
 		{

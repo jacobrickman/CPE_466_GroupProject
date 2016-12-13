@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.lang.Math;
 
 /**
  * Data Type for the clusters
@@ -55,6 +56,30 @@ public class Cluster {
 	public String toString()
 	{
 		return "Center of " + id + ": " + "(" + centroid.x + ", " + centroid.y + ")";
+	}
+	
+	public HashSet<Point> findOutliers() {
+		HashSet<Point> ret = new HashSet<Point>();
+		double x = 0;
+		double y = 0;
+		double sd;
+		
+		for (Point p : cluster)
+		{
+			x += Math.pow(p.x - centroid.x, 2);
+			y += Math.pow(p.y - centroid.y, 2);
+		}
+		
+		sd = Math.sqrt((x/cluster.size()) + (y/cluster.size()));
+		
+		for (Point r : cluster)
+		{
+			x = Math.sqrt(Math.pow(r.x - centroid.x, 2) + Math.pow(r.y - centroid.y, 2));
+			if (x > (3 * sd)) {
+				ret.add(r);
+			}
+		}
+		return ret;
 	}
 	
 	public Point reevaluate()
