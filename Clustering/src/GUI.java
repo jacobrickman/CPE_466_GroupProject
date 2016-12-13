@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -55,9 +56,9 @@ public class GUI {
 	        });
 	        slider.setMinorTickSpacing(1);
 	        slider.setMajorTickSpacing(10);
-	        slider.setMaximum(2010);
-	        slider.setMinimum(1910);
-	        slider.setValue(1960);
+	        slider.setMaximum(2013);
+	        slider.setMinimum(1941);
+	        slider.setValue(1941);
 	        slider.setSnapToTicks(true);
 	        slider.setPaintTicks(true);
 	        slider.setPaintLabels(true);
@@ -171,9 +172,8 @@ class MyPanel extends JPanel {
 	            	g.drawOval(o.midX, o.midY, o.width, o.height);
 	            }
             }
-            
-            g.drawString(Integer.toString(year), 1300, 300);
-
+            g.setFont(new Font("Verdana",Font.BOLD, 24));
+            g.drawString(Integer.toString(year), 700, 24);
         }  
 }
 
